@@ -1,0 +1,16 @@
+version: '1'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - "mongodb:/data/db"
+    networks:
+      - network_m
+
+volumes:
+  mongodb:
+
+networks:
+  network_m:
