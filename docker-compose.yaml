@@ -1,7 +1,10 @@
-version: '1'
+version: '3'
 services:
-  mongodb:
+  database:
     image: mongo
+    container_name: customer-database-container
+    environment:
+      - MONGO_INITDB_DATABASE=customers
     ports:
       - "27017:27017"
     volumes:
