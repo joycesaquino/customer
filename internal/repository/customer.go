@@ -39,7 +39,7 @@ func (repository CustomerRepository) Create(ctx context.Context, customer domain
 	return nil, result.InsertedID
 }
 
-func NewCustomerService(ctx context.Context) (error, *CustomerRepository) {
+func NewCustomerRepository(ctx context.Context) (error, *CustomerRepository) {
 	err, db := dao.CustomerDao(ctx)
 	if err != nil {
 		return err, nil

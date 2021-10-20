@@ -10,8 +10,6 @@ import (
 )
 
 type Config struct {
-	User               string        `env:"DATABASE_USER,required"`
-	Password           string        `env:"DATABASE_PASSWORD,required"`
 	Uri                string        `env:"DATABASE_URI,required"`
 	DatabaseName       string        `env:"DATABASE_NAME,required"`
 	DatabaseCollection string        `env:"DATABASE_COLLECTION,required"`
