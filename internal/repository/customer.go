@@ -28,6 +28,7 @@ func (repository CustomerRepository) FindById(ctx context.Context, id string) (e
 	if err := repository.db.Collection.FindOne(ctx, filter).Decode(&customer); err != nil {
 		return err, nil
 	}
+
 	return nil, customer
 }
 

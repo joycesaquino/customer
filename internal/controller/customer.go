@@ -21,17 +21,17 @@ func NewCustomerController(ctx context.Context) *CustomerController {
 	return &CustomerController{customerRepository: repo}
 }
 
-func GetCustomers(c *gin.Context) {
-	var customers []domain.Customer
-	c.IndentedJSON(http.StatusOK, customers)
+func (cc CustomerController) FindById(c *gin.Context) {
+	id := c.Param("id")
+
+	err, response := cc.customerRepository.FindById(c.Request.Context(), id)
+	if err != nil {
+		return
+	}
+	c.IndentedJSON(http.StatusOK, response)
 }
 
-func GetCustomerById(c *gin.Context) {
-	var customer domain.Customer
-	c.IndentedJSON(http.StatusOK, customer)
-}
-
-func (cc CustomerController) CreateCustomer(c *gin.Context) {
+func (cc CustomerController) Create(c *gin.Context) {
 	var customer *domain.Customer
 	if err := c.ShouldBindJSON(&customer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -10,9 +10,11 @@ func main() {
 	customerController := controller.NewCustomerController(context.Background())
 
 	router := gin.Default()
-	router.GET("/customer", controller.GetCustomers)
-	router.GET("/customer/:id", controller.GetCustomerById)
-	router.POST("/customer", customerController.CreateCustomer)
-	router.Run("localhost:8080")
+	router.GET("/customer/:id", customerController.FindById)
+	router.POST("/customer", customerController.Create)
+	err := router.Run("Customer API Running on localhost:8080")
+	if err != nil {
+		return
+	}
 
 }
