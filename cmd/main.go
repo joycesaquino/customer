@@ -12,7 +12,7 @@ func main() {
 	router := gin.Default()
 	router.GET("/customer/:id", customerController.FindById)
 	router.POST("/customer", customerController.Create)
-	err := router.Run("Customer API Running on localhost:8080")
+	err := router.Run("localhost:8080")
 	if err != nil {
 		return
 	}
