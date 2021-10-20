@@ -4,7 +4,6 @@ import (
 	"context"
 	"customer-api/internal/domain"
 	"customer-api/internal/repository"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -33,16 +32,16 @@ func GetCustomerById(c *gin.Context) {
 }
 
 func (cc CustomerController) CreateCustomer(c *gin.Context) {
-	var customer domain.Customer
+	var customer *domain.Customer
 	if err := c.ShouldBindJSON(&customer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	err, i := cc.customerRepository.Create(c.Request.Context(), customer)
+
+	err, response := cc.customerRepository.Create(c.Request.Context(), customer)
 	if err != nil {
 		return
 	}
 
-	log.Println(fmt.Sprintf("Customer %v, with ID %v", customer, i))
-	c.IndentedJSON(http.StatusOK, customer)
+	c.JSON(http.StatusCreated, response)
 }

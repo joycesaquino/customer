@@ -1,8 +1,14 @@
 package domain
 
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
+)
+
 type Customer struct {
-	Id    string `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	CPF   string `json:"cpf"`
+	Id        primitive.ObjectID `bson:"_id" json:"id"`
+	Name      string             `bson:"name" json:"name"`
+	Email     string             `bson:"email" json:"email"`
+	CPF       string             `bson:"cpf" json:"cpf"`
+	CreatedAt time.Time
 }

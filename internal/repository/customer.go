@@ -6,6 +6,7 @@ import (
 	"customer-api/internal/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type CustomerRepository struct {
@@ -30,13 +31,16 @@ func (repository CustomerRepository) FindById(ctx context.Context, id string) (e
 	return nil, customer
 }
 
-func (repository CustomerRepository) Create(ctx context.Context, customer domain.Customer) (error, interface{}) {
-	result, err := repository.db.Collection.InsertOne(ctx, customer)
+func (repository CustomerRepository) Create(ctx context.Context, customer *domain.Customer) (error, *domain.Customer) {
+	customer.Id = primitive.NewObjectID()
+	customer.CreatedAt = time.Now()
+
+	_, err := repository.db.Collection.InsertOne(ctx, customer)
 	if err != nil {
 		return err, nil
 	}
 
-	return nil, result.InsertedID
+	return nil, customer
 }
 
 func NewCustomerRepository(ctx context.Context) (error, *CustomerRepository) {
