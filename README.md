@@ -21,5 +21,5 @@ Quase todo projeto precisa de um servico seja de cliente/user/customer ... Entã
 
 ### To Run !
 - docker-compose up
-- Setar as variáveis de ambiente ;)
+- Configurar as variáveis de ambiente ;)
 - go run main.go
