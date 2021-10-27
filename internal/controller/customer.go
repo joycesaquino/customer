@@ -21,6 +21,16 @@ func NewCustomerController(ctx context.Context) *CustomerController {
 	return &CustomerController{customerRepository: repo}
 }
 
+func (cc CustomerController) DeleteById(c *gin.Context) {
+	id := c.Param("id")
+
+	err := cc.customerRepository.DeleteById(c.Request.Context(), id)
+	if err != nil {
+		return
+	}
+	c.IndentedJSON(http.StatusOK, err)
+}
+
 func (cc CustomerController) FindById(c *gin.Context) {
 	id := c.Param("id")
 

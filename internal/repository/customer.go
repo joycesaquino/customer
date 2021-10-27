@@ -14,7 +14,19 @@ type CustomerRepository struct {
 }
 
 func (repository CustomerRepository) Update() {}
-func (repository CustomerRepository) Delete() {}
+
+func (repository CustomerRepository) DeleteById(ctx context.Context, id string) error {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+	filter := bson.M{"_id": bson.M{"$eq": objId}}
+
+	if _, err := repository.db.Collection.DeleteOne(ctx, filter); err != nil {
+		return err
+	}
+	return nil
+}
 
 func (repository CustomerRepository) FindById(ctx context.Context, id string) (error, *domain.Customer) {
 	objId, err := primitive.ObjectIDFromHex(id)

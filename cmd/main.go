@@ -12,6 +12,7 @@ func main() {
 	router := gin.Default()
 	router.GET("/customer/:id", customerController.FindById)
 	router.POST("/customer", customerController.Create)
+	router.DELETE("/customer/:id", customerController.DeleteById)
 	err := router.Run("localhost:8080")
 	if err != nil {
 		return
