@@ -26,7 +26,7 @@ Quase todo projeto precisa de um servico seja de cliente/user/customer ... Entã
 
 ### To Test !
 
-#### Create Customer
+#### CREATE Customer
 
     curl --location --request POST 'localhost:8080/customer' \
         --data-raw '{
