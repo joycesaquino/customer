@@ -21,19 +21,32 @@ func NewCustomerController(ctx context.Context) *CustomerController {
 	return &CustomerController{customerRepository: repo}
 }
 
-func (cc CustomerController) FindAll(c *gin.Context) {
-	all := cc.customerRepository.FindAll(c.Request.Context())
-	c.IndentedJSON(http.StatusOK, all)
+func (cc CustomerController) Update(c *gin.Context) {
+
+	cpf := c.Param("cpf")
+	var customer interface{}
+	if err := c.ShouldBindJSON(&customer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	objectID := cc.customerRepository.Update(c.Request.Context(), cpf, customer)
+	c.IndentedJSON(http.StatusOK, objectID)
+
 }
 
 func (cc CustomerController) DeleteById(c *gin.Context) {
 	id := c.Param("id")
-
 	err := cc.customerRepository.DeleteById(c.Request.Context(), id)
 	if err != nil {
 		return
 	}
 	c.IndentedJSON(http.StatusOK, err)
+}
+
+func (cc CustomerController) FindAll(c *gin.Context) {
+	all := cc.customerRepository.FindAll(c.Request.Context())
+	c.IndentedJSON(http.StatusOK, all)
 }
 
 func (cc CustomerController) FindById(c *gin.Context) {

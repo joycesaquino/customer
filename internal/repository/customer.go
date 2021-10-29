@@ -14,7 +14,30 @@ type CustomerRepository struct {
 	db *dao.CustomerDatabase
 }
 
-func (repository CustomerRepository) Update() {}
+func (repository CustomerRepository) Update(ctx context.Context, cpf string, customer interface{}) *string {
+	pByte, err := bson.Marshal(customer)
+	if err != nil {
+		return nil
+	}
+
+	var update bson.M
+	err = bson.Unmarshal(pByte, &update)
+	if err != nil {
+		return nil
+	}
+
+	filter := bson.M{"cpf": bson.M{"$eq": cpf}}
+	result := repository.db.Collection.FindOneAndUpdate(ctx, filter, bson.D{{Key: "$set", Value: update}})
+
+	var updatedCustomer *domain.Customer
+	err = result.Decode(&updatedCustomer)
+	if err != nil {
+		return nil
+	}
+
+	id := updatedCustomer.Id.Hex()
+	return &id
+}
 
 func (repository CustomerRepository) FindAll(ctx context.Context) []domain.Customer {
 	find, err := repository.db.Collection.Find(ctx, bson.D{})
