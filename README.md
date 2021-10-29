@@ -10,6 +10,8 @@ Quase todo projeto precisa de um servico seja de cliente/user/customer ... Entã
 	github.com/caarlos0/env 
 	github.com/gin-gonic/gin 
 	go.mongodb.org/mongo-driver
+	github.com/go-playground/validator
+
 
 ### Variáveis de Ambiente
 

@@ -5,12 +5,14 @@ import (
 	"customer-api/internal/domain"
 	"customer-api/internal/repository"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"log"
 	"net/http"
 )
 
 type CustomerController struct {
 	customerRepository *repository.CustomerRepository
+	validator          *validator.Validate
 }
 
 func NewCustomerController(ctx context.Context) *CustomerController {
@@ -18,7 +20,7 @@ func NewCustomerController(ctx context.Context) *CustomerController {
 	if err != nil {
 		log.Fatalf("Fatal error: %s", err)
 	}
-	return &CustomerController{customerRepository: repo}
+	return &CustomerController{customerRepository: repo, validator: validator.New()}
 }
 
 func (cc CustomerController) Update(c *gin.Context) {
@@ -66,8 +68,15 @@ func (cc CustomerController) Create(c *gin.Context) {
 		return
 	}
 
+	err := cc.validator.Struct(customer)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.(validator.ValidationErrors).Error())
+		return
+	}
+
 	err, response := cc.customerRepository.Create(c.Request.Context(), customer)
 	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 

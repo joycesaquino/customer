@@ -7,8 +7,8 @@ import (
 
 type Customer struct {
 	Id        primitive.ObjectID `bson:"_id" json:"id"`
-	Name      string             `bson:"name" json:"name"`
-	Email     string             `bson:"email" json:"email"`
-	CPF       string             `bson:"cpf" json:"cpf"`
-	CreatedAt time.Time
+	Name      string             `bson:"name" json:"name" validate:"required"`
+	Email     string             `bson:"email" json:"email" validate:"required"`
+	CPF       string             `bson:"cpf" json:"cpf" validate:"required"`
+	CreatedAt time.Time          `bson:"created_at" json:"created_at"`
 }
