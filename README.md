@@ -19,6 +19,10 @@ Customer API service<br>
 	DatabaseName       string        `env:"DATABASE_NAME,required"`
 	DatabaseCollection string        `env:"DATABASE_COLLECTION,required"`
 	ConnectionTimeout  time.Duration `env:"DATABASE_TIMEOUT,required"`
+	ClientId           string        `env:"GOOGLE_CLIENT_ID,required"`
+	ClientSecret       string        `env:"GOOGLE_CLIENT_SECRET,required"`
+	OAuthSecret        string        `env:"OAUTH_SECRET,required"`
+
 
 
 ### To Run !
