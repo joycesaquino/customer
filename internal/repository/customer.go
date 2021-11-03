@@ -76,41 +76,41 @@ func (repository CustomerRepository) DeleteById(ctx context.Context, id string) 
 	return nil
 }
 
-func (repository CustomerRepository) FindById(ctx context.Context, id string) (error, *domain.Customer) {
+func (repository CustomerRepository) FindById(ctx context.Context, id string) (*domain.Customer, error) {
 	objId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 	var customer *domain.Customer
 
 	filter := bson.M{"_id": bson.M{"$eq": objId}}
 
 	if err := repository.db.Collection.FindOne(ctx, filter).Decode(&customer); err != nil {
-		return err, nil
+		return nil, err
 	}
 
-	return nil, customer
+	return customer, nil
 }
 
-func (repository CustomerRepository) Create(ctx context.Context, customer *domain.Customer) (error, *domain.Customer) {
+func (repository CustomerRepository) Create(ctx context.Context, customer *domain.Customer) (*domain.Customer, error) {
 	customer.Id = primitive.NewObjectID()
 	customer.CreatedAt = time.Now()
 
 	_, err := repository.db.Collection.InsertOne(ctx, customer)
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 
-	return nil, customer
+	return customer, nil
 }
 
-func NewCustomerRepository(ctx context.Context) (error, *CustomerRepository) {
+func NewCustomerRepository(ctx context.Context) (*CustomerRepository, error) {
 	err, db := dao.CustomerDao(ctx)
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 
-	return nil, &CustomerRepository{
+	return &CustomerRepository{
 		db: db,
-	}
+	}, nil
 }
