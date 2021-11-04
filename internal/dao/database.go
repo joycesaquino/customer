@@ -9,11 +9,13 @@ import (
 	"time"
 )
 
+const ErrorDatabase = "Error on configure Customer Database client. Error : %s"
+
 type Config struct {
-	Uri                string        `env:"DATABASE_URI,required"`
-	DatabaseName       string        `env:"DATABASE_NAME,required"`
-	DatabaseCollection string        `env:"DATABASE_COLLECTION,required"`
-	ConnectionTimeout  time.Duration `env:"DATABASE_TIMEOUT,required"`
+	Uri        string        `env:"DATABASE_URI,required"`
+	DbName     string        `env:"DATABASE_NAME,required"`
+	Collection string        `env:"DATABASE_COLLECTION,required"`
+	Timeout    time.Duration `env:"DATABASE_TIMEOUT,required"`
 }
 
 type CustomerDatabase struct {
@@ -35,14 +37,13 @@ func connection(ctx context.Context, client *mongo.Client) error {
 
 func CustomerDao(ctx context.Context) (error, *CustomerDatabase) {
 	var config Config
-	err := env.Parse(&config)
-	if err != nil {
-		log.Fatalf("Error to configure Customer Database cliente. Error : %s", err)
+	if err := env.Parse(&config); err != nil {
+		log.Fatalf(ErrorDatabase, err)
 	}
 
 	dbOptions := options.Client()
 	dbOptions.ApplyURI(config.Uri)
-	dbOptions.SetConnectTimeout(config.ConnectionTimeout)
+	dbOptions.SetConnectTimeout(config.Timeout)
 
 	client, err := mongo.NewClient(dbOptions)
 	if err != nil {
@@ -50,11 +51,13 @@ func CustomerDao(ctx context.Context) (error, *CustomerDatabase) {
 	}
 
 	if err := connection(ctx, client); err != nil {
-		log.Fatalf("Error to configure Customer Database cliente. Error : %s", err)
+		log.Fatalf(ErrorDatabase, err)
 	}
 
 	return nil, &CustomerDatabase{
-		Collection: client.Database(config.DatabaseName).Collection(config.DatabaseCollection),
+		Collection: client.
+			Database(config.DbName).
+			Collection(config.Collection),
 	}
 
 }

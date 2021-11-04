@@ -61,7 +61,7 @@ func (login Oauth2Client) GoogleCallback(c *gin.Context) {
 
 	if err != nil {
 		fmt.Println(err.Error())
-		c.Redirect(http.StatusTemporaryRedirect, "/")
+		c.Redirect(http.StatusOK, "/")
 		return
 	}
 

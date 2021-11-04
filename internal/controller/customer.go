@@ -67,15 +67,14 @@ func (cc CustomerController) Create(c *gin.Context) {
 		return
 	}
 
-	err := cc.validator.Struct(customer)
-	if err != nil {
+	if err := cc.validator.Struct(customer); err != nil {
 		c.JSON(http.StatusBadRequest, err.(validator.ValidationErrors).Error())
 		return
 	}
 
 	response, err := cc.CustomerRepository.Create(c.Request.Context(), customer)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
