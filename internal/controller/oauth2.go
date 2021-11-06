@@ -54,9 +54,9 @@ func (login Oauth2Client) GoogleCallback(c *gin.Context) {
 	}
 
 	customer, err := login.repository.Create(c.Request.Context(), &domain.Customer{
-		Name:  &user.Name,
+		Name:  user.Name,
 		Email: user.Email,
-		Image: &user.Image,
+		Image: user.Image,
 	})
 
 	if err != nil {
