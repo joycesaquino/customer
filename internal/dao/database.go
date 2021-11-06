@@ -34,6 +34,11 @@ func connection(ctx context.Context, client *mongo.Client) error {
 
 	return nil
 }
+func NewWithSettings(config Config, client *mongo.Client) *CustomerDatabase {
+	return &CustomerDatabase{
+		Collection: client.Database(config.DbName).Collection(config.Collection),
+	}
+}
 
 func CustomerDao(ctx context.Context) (error, *CustomerDatabase) {
 	var config Config
@@ -54,10 +59,5 @@ func CustomerDao(ctx context.Context) (error, *CustomerDatabase) {
 		log.Fatalf(ErrorDatabase, err)
 	}
 
-	return nil, &CustomerDatabase{
-		Collection: client.
-			Database(config.DbName).
-			Collection(config.Collection),
-	}
-
+	return nil, NewWithSettings(config, client)
 }
