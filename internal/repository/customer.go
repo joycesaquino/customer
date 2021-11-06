@@ -14,29 +14,37 @@ type CustomerRepository struct {
 	db *dao.CustomerDatabase
 }
 
-func (repository CustomerRepository) Update(ctx context.Context, cpf string, customer interface{}) *string {
-	pByte, err := bson.Marshal(customer)
+type CustomerRepositoryInterface interface {
+	Create(ctx context.Context, customer *domain.Customer) (*domain.Customer, error)
+	DeleteById(ctx context.Context, id string) error
+	FindAll(ctx context.Context) []domain.Customer
+	FindById(ctx context.Context, id string) (*domain.Customer, error)
+	Update(ctx context.Context, cpf string, customer interface{}) *string
+}
+
+func (repository CustomerRepository) Create(ctx context.Context, customer *domain.Customer) (*domain.Customer, error) {
+	customer.Id = primitive.NewObjectID()
+	customer.CreatedAt = time.Now()
+
+	_, err := repository.db.Collection.InsertOne(ctx, customer)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	var update bson.M
-	err = bson.Unmarshal(pByte, &update)
+	return customer, nil
+}
+
+func (repository CustomerRepository) DeleteById(ctx context.Context, id string) error {
+	objId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return nil
+		return err
 	}
+	filter := bson.M{"_id": bson.M{"$eq": objId}}
 
-	filter := bson.M{"cpf": bson.M{"$eq": cpf}}
-	result := repository.db.Collection.FindOneAndUpdate(ctx, filter, bson.D{{Key: "$set", Value: update}})
-
-	var updatedCustomer *domain.Customer
-	err = result.Decode(&updatedCustomer)
-	if err != nil {
-		return nil
+	if _, err := repository.db.Collection.DeleteOne(ctx, filter); err != nil {
+		return err
 	}
-
-	id := updatedCustomer.Id.Hex()
-	return &id
+	return nil
 }
 
 func (repository CustomerRepository) FindAll(ctx context.Context) []domain.Customer {
@@ -63,19 +71,6 @@ func (repository CustomerRepository) FindAll(ctx context.Context) []domain.Custo
 	return customers
 }
 
-func (repository CustomerRepository) DeleteById(ctx context.Context, id string) error {
-	objId, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return err
-	}
-	filter := bson.M{"_id": bson.M{"$eq": objId}}
-
-	if _, err := repository.db.Collection.DeleteOne(ctx, filter); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (repository CustomerRepository) FindById(ctx context.Context, id string) (*domain.Customer, error) {
 	objId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -92,16 +87,29 @@ func (repository CustomerRepository) FindById(ctx context.Context, id string) (*
 	return customer, nil
 }
 
-func (repository CustomerRepository) Create(ctx context.Context, customer *domain.Customer) (*domain.Customer, error) {
-	customer.Id = primitive.NewObjectID()
-	customer.CreatedAt = time.Now()
-
-	_, err := repository.db.Collection.InsertOne(ctx, customer)
+func (repository CustomerRepository) Update(ctx context.Context, cpf string, customer interface{}) *string {
+	pByte, err := bson.Marshal(customer)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
-	return customer, nil
+	var update bson.M
+	err = bson.Unmarshal(pByte, &update)
+	if err != nil {
+		return nil
+	}
+
+	filter := bson.M{"cpf": bson.M{"$eq": cpf}}
+	result := repository.db.Collection.FindOneAndUpdate(ctx, filter, bson.D{{Key: "$set", Value: update}})
+
+	var updatedCustomer *domain.Customer
+	err = result.Decode(&updatedCustomer)
+	if err != nil {
+		return nil
+	}
+
+	id := updatedCustomer.Id.Hex()
+	return &id
 }
 
 func NewCustomerRepository(ctx context.Context) (*CustomerRepository, error) {
