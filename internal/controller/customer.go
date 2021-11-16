@@ -18,14 +18,14 @@ func NewCustomerController(customerRepository *repository.CustomerRepository) *C
 }
 
 func (cc CustomerController) Update(c *gin.Context) {
-	cpf := c.Param("cpf")
+	email := c.Param("email")
 	var customer interface{}
 	if err := c.ShouldBindJSON(&customer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	objectID := cc.CustomerRepository.Update(c.Request.Context(), cpf, customer)
+	objectID := cc.CustomerRepository.Update(c.Request.Context(), email, customer)
 	c.IndentedJSON(http.StatusOK, objectID)
 }
 

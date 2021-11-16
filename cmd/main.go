@@ -23,7 +23,7 @@ func main() {
 	router.GET("/callback", loginController.GoogleCallback)
 	router.GET("/customer", customerController.FindAll)
 	router.GET("/customer/:id", customerController.FindById)
-	router.PUT("/customer/:cpf", customerController.Update)
+	router.PUT("/customer/:email", customerController.Update)
 	router.POST("/customer", customerController.Create)
 	router.DELETE("/customer/:id", customerController.DeleteById)
 	err = router.Run("localhost:8080")

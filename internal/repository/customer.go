@@ -99,7 +99,7 @@ func (repository CustomerRepository) Update(ctx context.Context, cpf string, cus
 		return nil
 	}
 
-	filter := bson.M{"cpf": bson.M{"$eq": cpf}}
+	filter := bson.M{"email": bson.M{"$eq": cpf}}
 	result := repository.db.Collection.FindOneAndUpdate(ctx, filter, bson.D{{Key: "$set", Value: update}})
 
 	var updatedCustomer *domain.Customer
