@@ -1,12 +1,10 @@
 package controller
 
 import (
-	"context"
 	"customer-api/internal/domain"
 	"customer-api/internal/repository"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"log"
 	"net/http"
 )
 
@@ -15,12 +13,8 @@ type CustomerController struct {
 	validator          *validator.Validate
 }
 
-func NewCustomerController(ctx context.Context) *CustomerController {
-	repo, err := repository.NewCustomerRepository(ctx)
-	if err != nil {
-		log.Fatalf("Fatal error: %s", err)
-	}
-	return &CustomerController{CustomerRepository: repo, validator: validator.New()}
+func NewCustomerController(customerRepository *repository.CustomerRepository) *CustomerController {
+	return &CustomerController{CustomerRepository: customerRepository, validator: validator.New()}
 }
 
 func (cc CustomerController) Update(c *gin.Context) {

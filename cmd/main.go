@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"customer-api/internal/controller"
+	"customer-api/internal/repository"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -10,9 +11,12 @@ import (
 func main() {
 
 	router := gin.Default()
-
-	customerController := controller.NewCustomerController(context.Background())
-	loginController := controller.Oauth2(customerController.CustomerRepository)
+	repo, err := repository.NewCustomerRepository(context.Background())
+	if err != nil {
+		return
+	}
+	customerController := controller.NewCustomerController(repo)
+	loginController := controller.Oauth2(repo)
 
 	router.GET("/", handleMain)
 	router.GET("/login", loginController.Login)
@@ -22,7 +26,7 @@ func main() {
 	router.PUT("/customer/:cpf", customerController.Update)
 	router.POST("/customer", customerController.Create)
 	router.DELETE("/customer/:id", customerController.DeleteById)
-	err := router.Run("localhost:8080")
+	err = router.Run("localhost:8080")
 	if err != nil {
 		return
 	}

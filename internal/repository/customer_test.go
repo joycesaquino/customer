@@ -2,9 +2,6 @@ package repository
 
 import (
 	"context"
-	"customer-api/internal/domain"
-	"github.com/go-playground/validator/v10"
-	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"os"
 	"testing"
@@ -18,38 +15,11 @@ func init() {
 	_ = os.Setenv("DATABASE_TIMEOUT", "1s")
 }
 
-type CustomerRepositoryMock struct {
-	mock.Mock
-}
-
-func getCustomer(id primitive.ObjectID, created time.Time) *domain.Customer {
-	cpf := "99999999999"
-	return &domain.Customer{
-		Id:        id,
-		Name:      "Joyce Aquino",
-		Email:     "joycesaquino@gmail.com",
-		CPF:       &cpf,
-		Image:     "image/profile.jpg",
-		CreatedAt: created,
-	}
-}
-
-func (r *CustomerRepositoryMock) Create(ctx context.Context, customer *domain.Customer) (*domain.Customer, error) {
-	r.Called(ctx, customer)
-	return getCustomer(primitive.NewObjectID(), time.Now()), nil
-}
-
-func (r *CustomerRepositoryMock) FindById(id primitive.ObjectID) (*domain.Customer, error) {
-	r.Called(id)
-	return getCustomer(id, time.Now()), nil
-}
-
 func TestCustomerController_Create(t *testing.T) {
 	created := time.Now()
 
 	type fields struct {
 		CustomerRepository *CustomerRepositoryMock
-		validator          *validator.Validate
 	}
 	type args struct {
 		ctx context.Context
@@ -61,7 +31,6 @@ func TestCustomerController_Create(t *testing.T) {
 	}{
 		{name: "Create new Customer", fields: fields{
 			CustomerRepository: new(CustomerRepositoryMock),
-			validator:          validator.New(),
 		}, args: args{
 			ctx: context.Background(),
 		}},
@@ -79,12 +48,12 @@ func TestCustomerController_Create(t *testing.T) {
 		})
 	}
 }
+
 func TestCustomerController_FindById(t *testing.T) {
 	created := time.Now()
 
 	type fields struct {
 		CustomerRepository *CustomerRepositoryMock
-		validator          *validator.Validate
 	}
 	type args struct {
 		ctx context.Context
@@ -96,7 +65,6 @@ func TestCustomerController_FindById(t *testing.T) {
 	}{
 		{name: "Find customer by Id", fields: fields{
 			CustomerRepository: new(CustomerRepositoryMock),
-			validator:          validator.New(),
 		}, args: args{
 			ctx: context.Background(),
 		}},
