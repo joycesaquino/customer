@@ -87,7 +87,7 @@ func (repository CustomerRepository) FindById(ctx context.Context, id string) (*
 	return customer, nil
 }
 
-func (repository CustomerRepository) Update(ctx context.Context, cpf string, customer interface{}) *string {
+func (repository CustomerRepository) Update(ctx context.Context, email string, customer interface{}) *string {
 	pByte, err := bson.Marshal(customer)
 	if err != nil {
 		return nil
@@ -99,7 +99,7 @@ func (repository CustomerRepository) Update(ctx context.Context, cpf string, cus
 		return nil
 	}
 
-	filter := bson.M{"email": bson.M{"$eq": cpf}}
+	filter := bson.M{"email": bson.M{"$eq": email}}
 	result := repository.db.Collection.FindOneAndUpdate(ctx, filter, bson.D{{Key: "$set", Value: update}})
 
 	var updatedCustomer *domain.Customer
