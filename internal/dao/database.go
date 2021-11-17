@@ -15,6 +15,8 @@ type Config struct {
 	Uri        string        `env:"DATABASE_URI,required"`
 	DbName     string        `env:"DATABASE_NAME,required"`
 	Collection string        `env:"DATABASE_COLLECTION,required"`
+	Password   string        `env:"DATABASE_PASSWORD,required"`
+	User       string        `env:"DATABASE_USER,required"`
 	Timeout    time.Duration `env:"DATABASE_TIMEOUT,required"`
 }
 
@@ -48,6 +50,10 @@ func CustomerDao(ctx context.Context) (error, *CustomerDatabase) {
 
 	dbOptions := options.Client()
 	dbOptions.ApplyURI(config.Uri)
+	dbOptions.SetAuth(options.Credential{
+		Username: config.User,
+		Password: config.Password,
+	})
 	dbOptions.SetConnectTimeout(config.Timeout)
 
 	client, err := mongo.NewClient(dbOptions)
