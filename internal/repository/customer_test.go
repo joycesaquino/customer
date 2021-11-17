@@ -13,6 +13,8 @@ func init() {
 	_ = os.Setenv("DATABASE_NAME", "customers")
 	_ = os.Setenv("DATABASE_COLLECTION", "customers")
 	_ = os.Setenv("DATABASE_TIMEOUT", "1s")
+	_ = os.Setenv("DATABASE_PASSWORD", "password")
+	_ = os.Setenv("DATABASE_USER", "user")
 }
 
 func TestCustomerController_Create(t *testing.T) {
