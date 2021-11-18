@@ -19,6 +19,7 @@ type Config struct {
 	ClientId     string `env:"GOOGLE_CLIENT_ID,required"`
 	ClientSecret string `env:"GOOGLE_CLIENT_SECRET,required"`
 	OAuthSecret  string `env:"OAUTH_SECRET,required"`
+	RedirectURL  string `env:"REDIRECT_URL,required" envDefault:"http://localhost:8080/callback"`
 }
 
 type Oauth2Client struct {
@@ -103,7 +104,7 @@ func Oauth2(repository *repository.CustomerRepository) *Oauth2Client {
 			ClientID:     config.ClientId,
 			ClientSecret: config.ClientSecret,
 			Endpoint:     google.Endpoint,
-			RedirectURL:  "http://localhost:8080/callback",
+			RedirectURL:  config.RedirectURL,
 			Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"},
 		}, config, repository,
 	}
