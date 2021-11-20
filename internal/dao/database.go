@@ -17,7 +17,7 @@ type Config struct {
 	Collection string        `env:"DATABASE_COLLECTION,required"`
 	Password   string        `env:"DATABASE_PASSWORD,required"`
 	User       string        `env:"DATABASE_USER,required"`
-	Timeout    time.Duration `env:"DATABASE_TIMEOUT,required"`
+	Timeout    time.Duration `env:"DATABASE_TIMEOUT" envDefault:"1s"`
 }
 
 type CustomerDatabase struct {

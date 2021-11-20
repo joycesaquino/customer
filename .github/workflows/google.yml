@@ -19,10 +19,21 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: cluster-1    # TODO: update to cluster name
-  GKE_ZONE: us-central1-c   # TODO: update to cluster zone
-  DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
-  IMAGE: static-site
+  GKE_CLUSTER: we-cluster
+  GKE_ZONE: us-central1
+  DEPLOYMENT_NAME: customer-api
+  IMAGE: golang:1.17-alpine
+  # Application envs
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+  DATABASE_URI: ${{ secrets.DATABASE_URI }}
+  DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+  DATABASE_COLLECTION: ${{ secrets.DATABASE_COLLECTION }}
+  DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+  DATABASE_USER: ${{ secrets.DATABASE_USER }}
+  DATABASE_TIMEOUT: ${{ secrets.DATABASE_TIMEOUT }}
+  OAUTH_SECRET: ${{ secrets.OAUTH_SECRET }}
+  REDIRECT_URL: ${{ secrets.REDIRECT_URL }}
 
 jobs:
   setup-build-publish-deploy:
@@ -34,7 +45,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # Setup gcloud CLI
+    - name: Customer API
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+      # Setup gcloud CLI
     - uses: google-github-actions/setup-gcloud@v0.2.0
       with:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
@@ -59,6 +75,16 @@ jobs:
           --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
+          --build-arg GOOGLE_CLIENT_ID= ${{ env.GOOGLE_CLIENT_ID } \
+          --build-arg GOOGLE_CLIENT_SECRET= ${{ env.GOOGLE_CLIENT_SECRET } \
+          --build-arg DATABASE_URI= ${{ env.DATABASE_URI } \
+          --build-arg DATABASE_NAME= ${{ env.DATABASE_NAME } \
+          --build-arg DATABASE_COLLECTION= ${{ env.DATABASE_COLLECTION } \
+          --build-arg DATABASE_PASSWORD= ${{ env.DATABASE_PASSWORD } \
+          --build-arg DATABASE_USER= ${{ env.DATABASE_USER } \
+          --build-arg DATABASE_TIMEOUT= ${{ env.DATABASE_TIMEOUT } \
+          --build-arg OAUTH_SECRET= ${{ env.OAUTH_SECRET } \
+          --build-arg REDIRECT_URL= ${{ env.REDIRECT_URL } \
           .
 
     # Push the Docker image to Google Container Registry
