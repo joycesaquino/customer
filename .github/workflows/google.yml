@@ -75,16 +75,16 @@ jobs:
           --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
-          --build-arg GOOGLE_CLIENT_ID= ${{ env.GOOGLE_CLIENT_ID } \
-          --build-arg GOOGLE_CLIENT_SECRET= ${{ env.GOOGLE_CLIENT_SECRET } \
-          --build-arg DATABASE_URI= ${{ env.DATABASE_URI } \
-          --build-arg DATABASE_NAME= ${{ env.DATABASE_NAME } \
-          --build-arg DATABASE_COLLECTION= ${{ env.DATABASE_COLLECTION } \
-          --build-arg DATABASE_PASSWORD= ${{ env.DATABASE_PASSWORD } \
-          --build-arg DATABASE_USER= ${{ env.DATABASE_USER } \
-          --build-arg DATABASE_TIMEOUT= ${{ env.DATABASE_TIMEOUT } \
-          --build-arg OAUTH_SECRET= ${{ env.OAUTH_SECRET } \
-          --build-arg REDIRECT_URL= ${{ env.REDIRECT_URL } \
+          --build-arg GOOGLE_CLIENT_ID="$GOOGLE_CLIENT_ID" \
+          --build-arg GOOGLE_CLIENT_SECRET= "$GOOGLE_CLIENT_SECRET" \
+          --build-arg DATABASE_URI= "$DATABASE_URI" \
+          --build-arg DATABASE_NAME= "$DATABASE_NAME" \
+          --build-arg DATABASE_COLLECTION= "$DATABASE_COLLECTION" \
+          --build-arg DATABASE_PASSWORD= "$DATABASE_PASSWORD" \
+          --build-arg DATABASE_USER= "$DATABASE_USER" \
+          --build-arg DATABASE_TIMEOUT= "$DATABASE_TIMEOUT" \
+          --build-arg OAUTH_SECRET= "$OAUTH_SECRET" \
+          --build-arg REDIRECT_URL= "$REDIRECT_URL" \
           .
 
     # Push the Docker image to Google Container Registry
