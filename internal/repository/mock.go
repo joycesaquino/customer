@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"customer-api/internal/domain"
+	"customer-api/internal/types"
 	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
@@ -12,9 +12,9 @@ type CustomerRepositoryMock struct {
 	mock.Mock
 }
 
-func getCustomer(id primitive.ObjectID, created time.Time) *domain.Customer {
+func getCustomer(id primitive.ObjectID, created time.Time) *types.Customer {
 	cpf := "99999999999"
-	return &domain.Customer{
+	return &types.Customer{
 		Id:        id,
 		Name:      "Joyce Aquino",
 		Email:     "joycesaquino@gmail.com",
@@ -24,12 +24,12 @@ func getCustomer(id primitive.ObjectID, created time.Time) *domain.Customer {
 	}
 }
 
-func (r *CustomerRepositoryMock) Create(ctx context.Context, customer *domain.Customer) (*domain.Customer, error) {
+func (r *CustomerRepositoryMock) Create(ctx context.Context, customer *types.Customer) (*types.Customer, error) {
 	r.Called(ctx, customer)
 	return getCustomer(primitive.NewObjectID(), time.Now()), nil
 }
 
-func (r *CustomerRepositoryMock) FindById(id primitive.ObjectID) (*domain.Customer, error) {
+func (r *CustomerRepositoryMock) FindById(id primitive.ObjectID) (*types.Customer, error) {
 	r.Called(id)
 	return getCustomer(id, time.Now()), nil
 }

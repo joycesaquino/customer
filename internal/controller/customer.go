@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"customer-api/internal/domain"
 	"customer-api/internal/repository"
+	"customer-api/internal/types"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -55,7 +55,7 @@ func (cc CustomerController) FindById(c *gin.Context) {
 }
 
 func (cc CustomerController) Create(c *gin.Context) {
-	var customer *domain.Customer
+	var customer *types.Customer
 	if err := c.ShouldBindJSON(&customer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

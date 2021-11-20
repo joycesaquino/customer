@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"customer-api/internal/dao"
-	"customer-api/internal/domain"
+	"customer-api/internal/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
@@ -15,14 +15,14 @@ type CustomerRepository struct {
 }
 
 type CustomerRepositoryInterface interface {
-	Create(ctx context.Context, customer *domain.Customer) (*domain.Customer, error)
+	Create(ctx context.Context, customer *types.Customer) (*types.Customer, error)
 	DeleteById(ctx context.Context, id string) error
-	FindAll(ctx context.Context) []domain.Customer
-	FindById(ctx context.Context, id string) (*domain.Customer, error)
+	FindAll(ctx context.Context) []types.Customer
+	FindById(ctx context.Context, id string) (*types.Customer, error)
 	Update(ctx context.Context, cpf string, customer interface{}) *string
 }
 
-func (repository CustomerRepository) Create(ctx context.Context, customer *domain.Customer) (*domain.Customer, error) {
+func (repository CustomerRepository) Create(ctx context.Context, customer *types.Customer) (*types.Customer, error) {
 	customer.Id = primitive.NewObjectID()
 	customer.CreatedAt = time.Now()
 
@@ -47,17 +47,17 @@ func (repository CustomerRepository) DeleteById(ctx context.Context, id string) 
 	return nil
 }
 
-func (repository CustomerRepository) FindAll(ctx context.Context) []domain.Customer {
+func (repository CustomerRepository) FindAll(ctx context.Context) []types.Customer {
 	find, err := repository.db.Collection.Find(ctx, bson.D{})
 	if err != nil {
 		return nil
 	}
 
-	var customers []domain.Customer
+	var customers []types.Customer
 
 	defer find.Close(ctx)
 	for find.Next(ctx) {
-		var customer domain.Customer
+		var customer types.Customer
 		if err := find.Decode(&customer); err != nil {
 			return nil
 		}
@@ -71,12 +71,12 @@ func (repository CustomerRepository) FindAll(ctx context.Context) []domain.Custo
 	return customers
 }
 
-func (repository CustomerRepository) FindById(ctx context.Context, id string) (*domain.Customer, error) {
+func (repository CustomerRepository) FindById(ctx context.Context, id string) (*types.Customer, error) {
 	objId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
 	}
-	var customer *domain.Customer
+	var customer *types.Customer
 
 	filter := bson.M{"_id": bson.M{"$eq": objId}}
 
@@ -102,7 +102,7 @@ func (repository CustomerRepository) Update(ctx context.Context, email string, c
 	filter := bson.M{"email": bson.M{"$eq": email}}
 	result := repository.db.Collection.FindOneAndUpdate(ctx, filter, bson.D{{Key: "$set", Value: update}})
 
-	var updatedCustomer *domain.Customer
+	var updatedCustomer *types.Customer
 	err = result.Decode(&updatedCustomer)
 	if err != nil {
 		return nil
