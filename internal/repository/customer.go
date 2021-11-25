@@ -6,7 +6,6 @@ import (
 	"customer-api/internal/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"log"
 	"time"
 )
 
@@ -45,30 +44,6 @@ func (repository CustomerRepository) DeleteById(ctx context.Context, id string) 
 		return err
 	}
 	return nil
-}
-
-func (repository CustomerRepository) FindAll(ctx context.Context) []types.Customer {
-	find, err := repository.db.Collection.Find(ctx, bson.D{})
-	if err != nil {
-		return nil
-	}
-
-	var customers []types.Customer
-
-	defer find.Close(ctx)
-	for find.Next(ctx) {
-		var customer types.Customer
-		if err := find.Decode(&customer); err != nil {
-			return nil
-		}
-		customers = append(customers, customer)
-	}
-
-	if err := find.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	return customers
 }
 
 func (repository CustomerRepository) FindById(ctx context.Context, id string) (*types.Customer, error) {

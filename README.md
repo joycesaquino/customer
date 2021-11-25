@@ -43,15 +43,15 @@ Customer API service<br>
     
 #### GET Customer By Id
 
-    curl --location --request GET 'localhost:8080/customer/mongo_object_id'
+    curl --location --request GET 'localhost:8080/customer/{mongo_object_id}'
 
 #### DELETE Customer By Id
 
-    curl --location --request DELETE 'localhost:8080/customer/mongo_object_id'
+    curl --location --request DELETE 'localhost:8080/customer/{mongo_object_id}'
 
 #### UPDATE Customer By CPF
 
-    curl --location --request PUT 'localhost:8080/customer/customer-cpf' \
+    curl --location --request PUT 'localhost:8080/customer/{customer-cpf}' \
         --data-raw '{
             "email": "customer-email@gmail.com"
         }

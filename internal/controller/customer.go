@@ -38,11 +38,6 @@ func (cc CustomerController) DeleteById(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, err)
 }
 
-func (cc CustomerController) FindAll(c *gin.Context) {
-	all := cc.CustomerRepository.FindAll(c.Request.Context())
-	c.IndentedJSON(http.StatusOK, all)
-}
-
 func (cc CustomerController) FindById(c *gin.Context) {
 	id := c.Param("id")
 

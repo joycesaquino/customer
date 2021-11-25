@@ -21,7 +21,6 @@ func main() {
 	router.GET("/", handleMain)
 	router.GET("/login", loginController.Login)
 	router.GET("/callback", loginController.GoogleCallback)
-	router.GET("/customer", customerController.FindAll)
 	router.GET("/customer/:id", customerController.FindById)
 	router.PUT("/customer/:email", customerController.Update)
 	router.POST("/customer", customerController.Create)
