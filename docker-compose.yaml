@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  postgresql:
+    image: postgres:16.2
+    container_name: my-postgre
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Senh4Turm4#1
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:9.1.0
+    container_name: my-pg-admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: messias.b@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: Senh4Turm4#1
+    ports:
+      - "7000:80"
+    networks:
+      - backend
+    depends_on:
+      - postgresql
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.4
+    container_name: my-keycloak
+    command: start-dev --features authorization,organization
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: Senh4Turm4#1
+    ports:
+      - "7001:8080"
+    networks:
+      - backend
+    restart: unless-stopped
+
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: my-sonarqube
+    ports:
+      - "7002:9000"
+    networks:
+      - backend
+    restart: unless-stopped
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: my-jenkins
+    ports:
+      - "7003:8080"
+      - "7004:50000"
+    networks:
+      - backend
+    restart: unless-stopped
+
+networks:
+  backend:
+    driver: bridge
