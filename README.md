@@ -61,3 +61,198 @@ This application uses Flyway for database migrations. The migration scripts are 
 ## Configuration
 
 The application configuration is in `src/main/resources/application.properties`.
+
+## API Documentation
+
+The Customer Service provides a RESTful API for managing customer data. All endpoints are prefixed with `/api/customers`.
+
+### Get All Customers
+
+Retrieves a list of all customers.
+
+- **URL**: `/api/customers`
+- **Method**: `GET`
+- **Response**: Array of customer objects
+- **Response Code**: 200 OK
+
+Example Response:
+```json
+[
+  {
+    "id": 1,
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "123-456-7890",
+    "createdAt": "2023-06-15T10:30:00Z",
+    "updatedAt": "2023-06-15T10:30:00Z",
+    "status": "ACTIVE"
+  },
+  {
+    "id": 2,
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
+    "phone": "987-654-3210",
+    "createdAt": "2023-06-16T14:20:00Z",
+    "updatedAt": "2023-06-16T14:20:00Z",
+    "status": "ACTIVE"
+  }
+]
+```
+
+### Get Customer by ID
+
+Retrieves a specific customer by their ID.
+
+- **URL**: `/api/customers/{id}`
+- **Method**: `GET`
+- **URL Parameters**: `id=[Long]` - The ID of the customer
+- **Response**: Customer object
+- **Response Codes**:
+  - 200 OK - Customer found
+  - 404 Not Found - Customer not found
+
+Example Response (200 OK):
+```json
+{
+  "id": 1,
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "123-456-7890",
+  "createdAt": "2023-06-15T10:30:00Z",
+  "updatedAt": "2023-06-15T10:30:00Z",
+  "status": "ACTIVE"
+}
+```
+
+### Get Customer by Email
+
+Retrieves a specific customer by their email address.
+
+- **URL**: `/api/customers/by-email`
+- **Method**: `GET`
+- **Query Parameters**: `email=[String]` - The email of the customer
+- **Response**: Customer object
+- **Response Codes**:
+  - 200 OK - Customer found
+  - 404 Not Found - Customer not found
+
+Example Request:
+```
+GET /api/customers/by-email?email=john.doe@example.com
+```
+
+Example Response (200 OK):
+```json
+{
+  "id": 1,
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "123-456-7890",
+  "createdAt": "2023-06-15T10:30:00Z",
+  "updatedAt": "2023-06-15T10:30:00Z",
+  "status": "ACTIVE"
+}
+```
+
+### Create Customer
+
+Creates a new customer.
+
+- **URL**: `/api/customers`
+- **Method**: `POST`
+- **Request Body**: Customer creation data
+- **Response**: Created customer object
+- **Response Codes**:
+  - 201 Created - Customer successfully created
+  - 409 Conflict - Customer with the provided email already exists
+
+Example Request:
+```json
+{
+  "firstName": "Alice",
+  "lastName": "Johnson",
+  "email": "alice.johnson@example.com",
+  "phone": "555-123-4567",
+  "status": "ACTIVE"
+}
+```
+
+Example Response (201 Created):
+```json
+{
+  "id": 3,
+  "firstName": "Alice",
+  "lastName": "Johnson",
+  "email": "alice.johnson@example.com",
+  "phone": "555-123-4567",
+  "createdAt": "2023-06-17T09:45:00Z",
+  "updatedAt": "2023-06-17T09:45:00Z",
+  "status": "ACTIVE"
+}
+```
+
+### Update Customer
+
+Updates an existing customer.
+
+- **URL**: `/api/customers/{id}`
+- **Method**: `PUT`
+- **URL Parameters**: `id=[Long]` - The ID of the customer to update
+- **Request Body**: Customer update data
+- **Response**: Updated customer object
+- **Response Codes**:
+  - 200 OK - Customer successfully updated
+  - 404 Not Found - Customer not found
+
+Example Request:
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe.updated@example.com",
+  "phone": "123-456-7890",
+  "status": "INACTIVE"
+}
+```
+
+Example Response (200 OK):
+```json
+{
+  "id": 1,
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe.updated@example.com",
+  "phone": "123-456-7890",
+  "createdAt": "2023-06-15T10:30:00Z",
+  "updatedAt": "2023-06-17T11:20:00Z",
+  "status": "INACTIVE"
+}
+```
+
+### Delete Customer
+
+Deletes a customer by their ID.
+
+- **URL**: `/api/customers/{id}`
+- **Method**: `DELETE`
+- **URL Parameters**: `id=[Long]` - The ID of the customer to delete
+- **Response Codes**:
+  - 204 No Content - Customer successfully deleted
+  - 404 Not Found - Customer not found
+
+Example Request:
+```
+DELETE /api/customers/3
+```
+
+## Customer Status Values
+
+The following status values are available for customers:
+
+- `ACTIVE` - Customer is active and can use all services
+- `INACTIVE` - Customer is inactive (e.g., account dormant)
+- `SUSPENDED` - Customer account has been suspended
