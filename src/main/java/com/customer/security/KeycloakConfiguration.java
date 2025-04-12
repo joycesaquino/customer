@@ -23,7 +23,7 @@ public class KeycloakConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(authorizeRequests -> {
       authorizeRequests.requestMatchers("/actuator/**").permitAll();
-      authorizeRequests.anyRequest().authenticated();
+      authorizeRequests.anyRequest().permitAll();
     });
 
     http.sessionManagement(sessionManagementConfigurer ->
